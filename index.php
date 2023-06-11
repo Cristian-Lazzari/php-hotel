@@ -39,6 +39,33 @@
         ],
 
     ];
+    $park = isset($_GET['park']);
+    $vot = $_GET['vot'] ?? '';
+    $arrfiltrati=[];
+    $arrfiltrati = $hotels;
+
+    if($vot){
+        $filter_result=[];
+        foreach($arrfiltrati as $hotel){
+            if($hotel['vote'] >= $vot ){
+                $filter_result[] = $hotel;
+            }
+        }
+        $arrfiltrati = $filter_result;
+    }
+
+    if($park){
+        $sfilter_result=[];
+        foreach($filter_result as $hotel){
+            if($hotel['parking']){
+                $sfilter_result[] = $hotel;
+            }
+        }
+        $arrfiltrati = $sfilter_result;
+    }
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,8 +75,32 @@
     <title>hotels</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous" defer></script>
+    <style>
+        form{
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
+    <form action="" method="get">
+        <label for="park">CON PARCHEGGIO</label> <input type="checkbox" name="park" id="parck">
+        <label for="park"  >VOTO MINIMO</label>
+        <select name="vot" id="vot" value="">
+            <option value="1"><?=$vot?></option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <button type="submit" class="btn btn-dark">cerca</button>
+        <a href="/php-hotel/" class="btn btn-danger">reset</a>
+        
+    </form>
     <table class="table table-light table-striped">
         <thead>
             <tr>
@@ -60,11 +111,11 @@
                 <th class="table-darck">DISTANZA CENTRO</th>
             </tr>
         </thead>
-        <tbody><?php foreach($hotels as $hotel){?>
+        <tbody><?php foreach($arrfiltrati as $hotel){?>
             <tr>
                 <td class="table-light"><?=$hotel['name']?></td>
                 <td class="table-light"><?=$hotel['description']?></td>
-                <td class="table-light"><?=$hotel['parking']?></td>
+                <td class="table-light"><i class="bi <?=$hotel['parking'] ? 'bi-check-circle-fill' : 'bi-x-circle-fill'?>"></i></td>
                 <td class="table-light"><?=$hotel['vote']?></td>
                 <td class="table-light"><?=$hotel['distance_to_center']?></td>
             </tr> <?php }?>
